@@ -1,0 +1,73 @@
+.profile-wrapper {
+    background-color:#E5E5E5;
+    padding: 5% 10%;
+}
+
+.profile-heading {
+    font-family: 'Product Sans', "sans-serif";
+    font-weight: 700;
+    font-size: 36px;
+    margin-bottom: 5%;
+}
+
+.profile-detail-wrapper {
+    margin-left: 10%;
+}
+
+.profile-detail-heading {
+    font-family: 'Product Sans', 'sans-serif';
+    color: #C32424;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.profile-detail-content {
+    font-family: 'Product Sans', 'sans-serif';
+    color: #616161;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.donation-box {
+    background-color: #FFFF;
+    padding: 5% 5% 1% 5%;
+}
+
+.donation-heading {
+    font-family: 'Product Sans', 'sans-serif';
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.donation-date {
+    font-size: 9px;
+    font-weight: 300;
+}
+
+.donation-total {
+    color: #974A4A;
+    font-size: 10px;
+    font-weight: 900;
+    display: inline-block;
+    margin-right: 55%;
+}
+
+.donation-status {
+    vertical-align:middle;
+    font-weight: 500;
+    padding: 0 6%;
+    font-size: 10px;
+    height: 19px;
+    border-radius: 2px;
+    border-color: #aafad0;
+    background: #aafad0;
+    color: #00FF47;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.donation-status:hover {
+    border-color: #aafad0;
+    background: #aafad0;
+    color: #00FF47;
+}
