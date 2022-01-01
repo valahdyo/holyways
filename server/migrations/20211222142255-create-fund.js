@@ -21,6 +21,13 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
+      idUser: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        }
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.fn('now'),

@@ -6,7 +6,7 @@
 #dropdown-basic {
   background-color: #c32424;
   border-color: #c32424;
-  margin-right: 100px;
+  margin-right: 70px;
 }
 
 #dropdown-basic:active {
@@ -86,7 +86,6 @@
   color: black;
   text-decoration: none;
 }
-
 
 .a-register:hover {
   color: black;

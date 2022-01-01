@@ -1,4 +1,8 @@
 import { useHistory } from "react-router-dom";
+import { useContext } from "react";
+import { useQuery } from "react-query";
+import { API } from "../config/api";
+import { AuthContext } from "../context/AuthContext";
 import {
   Button,
   Container,
@@ -12,7 +16,19 @@ import DonateImage_1 from "../assets/donate-1.png";
 function Raisefundpage() {
   let isLogin = localStorage.getItem('isLogin')
   let history = useHistory()
+  const [state] = useContext(AuthContext)
+
   const handleRaisefund = () => history.push('/formfund')
+
+  let {data: fundlist} = useQuery("fundListCache", async () => {
+    const config = {
+      headers: {
+        "Content-type": "application/json"
+      }
+    }
+    const response = await API.get("/user/fund/" + state.user.id)
+    return response?.data.data.user.userFund
+  })
 
   return (
     <>
@@ -25,8 +41,8 @@ function Raisefundpage() {
           </div>
         </Row>
         <Row>
-          <Col lg={4} className="donate-box pl-0 pt-0">
-          <DonateCardComponent
+          
+          {/* <DonateCardComponent
               isLogin={isLogin}
               image={DonateImage_1}
               title={"The Strength of a People. Power of Community"}
@@ -35,8 +51,19 @@ function Raisefundpage() {
               }
               total={"Rp 25.000.000"}
               progress={60}
+            /> */}
+            {fundlist?.map((item, index) => {
+              return <><Col lg={4} className="donate-box pl-0 pt-0"> <DonateCardComponent
+              id={item.id}
+              isLogin={isLogin}
+              image={item.thumbnail}
+              title={item.title}
+              desc={item.description}
+              total={item.goal}
+              progress={60}
             />
-          </Col>
+            </Col></>
+            })}
         </Row>
       </Container>
     </>

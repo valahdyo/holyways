@@ -1,15 +1,14 @@
 import { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { useQuery } from "react-query";
+import { API } from "../config/api";
+
 import NavbarComponent from "../components/Navbar";
+import RegisterModalComponent from "../components/RegisterModal";
 import DonateCardComponent from "../components/DonateCard";
 import LoginModalComponent from "../components/LoginModal";
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import HeaderImage_1 from "../assets/1340554718-1.png";
 import HeaderImage_2 from "../assets/1340554718-2.png";
 import DonateImage_1 from "../assets/donate-1.png";
@@ -17,19 +16,39 @@ import DonateImage_2 from "../assets/donate-2.png";
 import DonateImage_3 from "../assets/donate-3.png";
 
 function Homepage() {
-  let {isLogin, login} = useContext(AuthContext)
-  let history = useHistory()
-  isLogin = localStorage.getItem('isLogin')
+  const [state] = useContext(AuthContext);
+  let history = useHistory();
+  const isLogin = localStorage.getItem("isLogin");
+
+  const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  
+
   const handleShowLogin = () => setShowLogin(true);
+  const handleShowRegister = () => setShowRegister(true);
   const closeLogin = () => setShowLogin(false);
-  const handleCloseLogin = () => {
-    login()
-    localStorage.setItem('isLogin', "true")
-    setShowLogin(false);
-    history.push("/")
-  }
+  const closeRegister = () => setShowRegister(false);
+
+  let { data: fundList } = useQuery("fundListCache", async () => {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    const response = await API.get("/funds");
+    return response?.data.data.fund;
+  });
+
+  let totalDonated1 = 0;
+  let totalDonated2 = 0;
+  let totalDonated3 = 0;
+
+  // const fundLength = fundList?.length;
+  // const arr = [];
+  // while (arr.length < 3) {
+  //   const r = Math.floor(Math.random() * fundLength) + 1;
+  //   if (arr.indexOf(r) === -1) arr.push(r);
+  // }
+
   return (
     <>
       <NavbarComponent />
@@ -46,7 +65,9 @@ function Homepage() {
               ever since the 1500s, when an unknown printer took a galley of
               type and scrambled it to make a type specimen book.
             </p>
-            <Button href="#donate-now" className="header-btn">Donate Now</Button>
+            <Button href="#donate-now" className="header-btn">
+              Donate Now
+            </Button>
           </Col>
           <Col lg={5}>
             <img src={HeaderImage_1} className="header-img-1" alt="hero1"></img>
@@ -85,36 +106,37 @@ function Homepage() {
         </Row>
       </Container>
       <Container fluid className="donate-wrapper">
-        <h1 id="donate-now" class="donate-heading">Donate Now</h1>
-        <Row>
-          <Col lg={4} md={6} className="donate-box">
-            <DonateCardComponent
-              closeLogin={closeLogin}
-              handleShowLogin={handleShowLogin}
-              isLogin={isLogin}
-              image={DonateImage_1}
-              title={"The Strength of a People. Power of Community"}
-              desc={
-                "Some quick example text to build on the card title and make up the bulk of the card's content."
-              }
-              total={"Rp 25.000.000"}
-              progress={60}
-            />
-          </Col>
-          <Col lg={4} md={6} className="donate-box">
-            <DonateCardComponent
-              closeLogin={closeLogin}
-              handleShowLogin={handleShowLogin}
-              isLogin={isLogin}
-              image={DonateImage_2}
-              progress={40}
-              total={"Rp 25.000.000"}
-              title={"Empowering Communities Ending Poverty"}
-              desc={
-                "Some quick example text to build on the card title and make up the bulk of the card's content."
-              }
-            />
-          </Col>
+        <h1 id="donate-now" class="donate-heading">
+          Donate Now
+        </h1>
+        <Row className="d-flex justify-content-center">
+          {fundList?.slice(0, 3).map((item, index) => {
+            let totalDonated = 0;
+            if (item.userDonate) {
+              item.userDonate.forEach((list) => {
+                if (list.status === "success")
+                  totalDonated = +list.donateAmount;
+              });
+            }
+            return (
+              <>
+                <Col lg={4} md={6} className="donate-box">
+                  <DonateCardComponent
+                    closeLogin={closeLogin}
+                    handleShowLogin={handleShowLogin}
+                    isLogin={isLogin}
+                    id={item.id}
+                    image={item.thumbnail}
+                    progress={(totalDonated / item.goal) * 100}
+                    total={item.goal}
+                    title={item.title}
+                    desc={item.description}
+                  />
+                </Col>
+              </>
+            );
+          })}
+          {/* 
           <Col lg={4} md={6} className="donate-box">
             <DonateCardComponent
               closeLogin={closeLogin}
@@ -122,16 +144,24 @@ function Homepage() {
               isLogin={isLogin}
               image={DonateImage_3}
               progress={80}
-              total={"Rp 60.000.000"}
+              total={"60000000"}
               title={"Please our brothers in flores"}
               desc={
                 "Some quick example text to build on the card title and make up the bulk of the card's content."
               }
             />
-          </Col>
+          </Col> */}
         </Row>
       </Container>
-      <LoginModalComponent closeLogin={closeLogin} showLogin={showLogin} handleCloseLogin={handleCloseLogin}/>
+      <LoginModalComponent
+        closeLogin={closeLogin}
+        showLogin={showLogin}
+        handleShowRegister={handleShowRegister}
+      />
+      <RegisterModalComponent
+        showRegister={showRegister}
+        closeRegister={closeRegister}
+      />
     </>
   );
 }

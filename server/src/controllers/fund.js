@@ -1,7 +1,7 @@
 const { User, Fund, Transaction } = require("../../models");
 
 const Joi = require('joi');
-const IMAGE_PATH = `http://localhost:3000/uploads/`
+const IMAGE_PATH = `http://localhost:5000/uploads/`
 //Get all funds
 exports.getFunds = async (req, res) => {
   try {
@@ -52,6 +52,7 @@ exports.addFund = async (req, res) => {
     title: Joi.string().required(),
     goal: Joi.number().required(),
     description: Joi.string().min(5).required(),
+    idUser: Joi.number().required()
   });
   const { error } = schema.validate(req.body);
 
@@ -117,7 +118,7 @@ exports.getFund = async (req, res) => {
           as: "userDetail",
           attributes: ["fullName", "email"]
         },
-        attributes: ["id", "donateAmount", "status", "proofAttachment"]
+        attributes: ["id", "donateAmount", "status", "proofAttachment", "createdAt"]
       },
       attributes: {
         exclude: ["createdAt", "updatedAt"],

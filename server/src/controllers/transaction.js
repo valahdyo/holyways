@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const { User, Fund, Transaction } = require("../../models");
-const IMAGE_PATH = `http://localhost:3000/uploads/`
+const IMAGE_PATH = `http://localhost:5000/uploads/`
 
 
 //Add Transaction
@@ -19,7 +19,6 @@ exports.addTransaction = async (req, res) => {
       });
   
     try {
-      console.log(req.id.id)
       await Transaction.create({
         ...req.body, 
         proofAttachment:req.file.filename,
@@ -63,5 +62,25 @@ exports.addTransaction = async (req, res) => {
     } catch (error) {
       console.log(error)
       res.status(500).send({status: 'failed', msg: 'Add transaction fund error'})
+    }
+  }
+
+  exports.updateTransactionStatus = async (req, res) => {
+    try {
+      await Transaction.update(req.body, {
+        where: {id:req.params.idTransaction}
+      })
+      const data = await Transaction.findOne({
+        where: {id:req.params.idTransaction}
+      })
+      res.status(200).send({
+        status: 'success',
+        data: {
+          transaction: data
+        }
+      });
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({status: 'failed', msg: 'Cannot Update Status'})
     }
   }

@@ -15,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         as: "userDonate",
         foreignKey: "idFund"
       })
+      Fund.belongsTo(models.User, {
+        as: "userFund",
+        foreignKey: {
+          name: "idUser",
+        },
+      });
 
     }
   };

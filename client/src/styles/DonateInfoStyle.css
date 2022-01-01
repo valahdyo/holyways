@@ -21,7 +21,7 @@
 }
 
 .donate-info-collected {
-  width: 90%;
+  width: 100%;
 }
 
 .donate-info-detail {
@@ -71,22 +71,22 @@
 }
 
 .attach-donate-btn:active {
-    background-color: #c32424!important;
-    border-color: #c32424!important;
-    box-shadow: none!important;
-  }
+  background-color: #c32424 !important;
+  border-color: #c32424 !important;
+  box-shadow: none !important;
+}
 
 .attach-donate-btn:hover {
-    background-color: #db2727;
-    border-color: #db2727;
-    box-shadow: none!;
-  }
+  background-color: #db2727;
+  border-color: #db2727;
+  box-shadow: none!;
+}
 
-  .attach-donate-btn:active {
-    background-color: #c32424;
-    border-color: #c32424;
-    box-shadow: none;
-  }
+.attach-donate-btn:active {
+  background-color: #c32424;
+  border-color: #c32424;
+  box-shadow: none;
+}
 
 .ml-7 {
   margin-left: 3%;
@@ -94,4 +94,8 @@
 
 .ml-40 {
   margin-left: 40%;
+}
+
+.ml-50 {
+  margin-left: 50%;
 }

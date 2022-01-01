@@ -116,12 +116,11 @@ body {
   font-weight: 700;
   font-family: "Product Sans";
   text-align: center;
+  margin-bottom: 5%;
 }
 
 .donate-box {
-  padding-top: 5%;
-  margin-bottom: 20%;
-  display: flex;
+  margin-bottom: 5%;
 }
 
 .donate-title {
