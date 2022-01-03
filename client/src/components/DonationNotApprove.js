@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { Button, Container, Row, Col } from "react-bootstrap";
-import ApproveModalComponent from "./ApproveModal";
+import { useState } from "react"
+import { Button, Container, Row, Col } from "react-bootstrap"
+import ApproveModalComponent from "./ApproveModal"
 
-import convertRupiah from "rupiah-format";
+import convertRupiah from "rupiah-format"
 
 function DonationNotApproveComponent({ list, refetch, total }) {
   const [showDonate, setShowDonate] = useState({
     showModal: false,
     data: null,
-  });
+  })
 
   const handleShowDonate = (e, index) => {
-    setShowDonate({ showModal: true, modalId: index });
-  };
+    setShowDonate({ showModal: true, modalId: index })
+  }
 
   const handleCloseDonate = (e, index) => {
-    setShowDonate({ showModal: false, data: null });
-  };
+    setShowDonate({ showModal: false, data: null })
+  }
 
   return (
     <>
@@ -25,31 +25,10 @@ function DonationNotApproveComponent({ list, refetch, total }) {
           Donation has not been approved ({total.notApprove})
         </h1>
         <Row className="justify-content-center">
-          <Col lg={12}>
-            <div className="d-flex justify-content-between donation-box mb-4 pt-4 pl-4">
-              <div className="w-50">
-                <h3 className="donation-heading">Zain</h3>
-                <p className="donation-date">
-                  <strong style={{ fontWeight: 900 }}>Saturday, </strong>12
-                  April 2021
-                </p>
-                <p className="donation-total">Total : Rp. 45.000</p>
-              </div>
-              <div className="align-self-center">
-                <Button
-                  onClick={handleShowDonate}
-                  className="donate-btn"
-                  variant="primary"
-                >
-                  View
-                </Button>
-              </div>
-            </div>
-          </Col>
           {list?.map((item, index) => {
             if (item.status === "pending") {
-              let date = new Date(item.createdAt);
-              date = date.toDateString().split(" ");
+              let date = new Date(item.createdAt)
+              date = date.toDateString().split(" ")
               return (
                 <>
                   <Col lg={12} key={index}>
@@ -82,10 +61,14 @@ function DonationNotApproveComponent({ list, refetch, total }) {
                     </div>
                   </Col>
                 </>
-              );
+              )
             }
           })}
-          <p className="donate-info-desc">Load More</p>
+          {total?.transaction > 3 ? (
+            <p className="donate-info-desc">Load More</p>
+          ) : (
+            ""
+          )}
         </Row>
       </Container>
       <ApproveModalComponent
@@ -95,7 +78,7 @@ function DonationNotApproveComponent({ list, refetch, total }) {
         refetch={refetch}
       />
     </>
-  );
+  )
 }
 
-export default DonationNotApproveComponent;
+export default DonationNotApproveComponent

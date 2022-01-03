@@ -99,6 +99,7 @@ function ProfileUpdatepage() {
             <Row>
               <Col>
                 <img
+                  style={{ width: "inherit", height: "auto" }}
                   src={profile?.profileImage ? profile?.profileImage : NoImage}
                   alt="profile"
                 />

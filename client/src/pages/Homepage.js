@@ -1,46 +1,46 @@
-import { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
-import { useQuery } from "react-query";
-import { API } from "../config/api";
+import { useState, useContext } from "react"
+import { useHistory } from "react-router-dom"
+import { AuthContext } from "../context/AuthContext"
+import { useQuery } from "react-query"
+import { API } from "../config/api"
 
-import NavbarComponent from "../components/Navbar";
-import RegisterModalComponent from "../components/RegisterModal";
-import DonateCardComponent from "../components/DonateCard";
-import LoginModalComponent from "../components/LoginModal";
-import { Button, Container, Row, Col } from "react-bootstrap";
-import HeaderImage_1 from "../assets/1340554718-1.png";
-import HeaderImage_2 from "../assets/1340554718-2.png";
-import DonateImage_1 from "../assets/donate-1.png";
-import DonateImage_2 from "../assets/donate-2.png";
-import DonateImage_3 from "../assets/donate-3.png";
+import NavbarComponent from "../components/Navbar"
+import RegisterModalComponent from "../components/RegisterModal"
+import DonateCardComponent from "../components/DonateCard"
+import LoginModalComponent from "../components/LoginModal"
+import { Button, Container, Row, Col } from "react-bootstrap"
+import HeaderImage_1 from "../assets/1340554718-1.png"
+import HeaderImage_2 from "../assets/1340554718-2.png"
+import DonateImage_1 from "../assets/donate-1.png"
+import DonateImage_2 from "../assets/donate-2.png"
+import DonateImage_3 from "../assets/donate-3.png"
 
 function Homepage() {
-  const [state] = useContext(AuthContext);
-  let history = useHistory();
-  const isLogin = localStorage.getItem("isLogin");
+  const [state] = useContext(AuthContext)
+  let history = useHistory()
+  const isLogin = localStorage.getItem("isLogin")
 
-  const [showRegister, setShowRegister] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
 
-  const handleShowLogin = () => setShowLogin(true);
-  const handleShowRegister = () => setShowRegister(true);
-  const closeLogin = () => setShowLogin(false);
-  const closeRegister = () => setShowRegister(false);
+  const handleShowLogin = () => setShowLogin(true)
+  const handleShowRegister = () => setShowRegister(true)
+  const closeLogin = () => setShowLogin(false)
+  const closeRegister = () => setShowRegister(false)
 
   let { data: fundList } = useQuery("fundListCache", async () => {
     const config = {
       headers: {
         "Content-type": "application/json",
       },
-    };
-    const response = await API.get("/funds");
-    return response?.data.data.fund;
-  });
+    }
+    const response = await API.get("/funds")
+    return response?.data.data.fund
+  })
 
-  let totalDonated1 = 0;
-  let totalDonated2 = 0;
-  let totalDonated3 = 0;
+  let totalDonated1 = 0
+  let totalDonated2 = 0
+  let totalDonated3 = 0
 
   // const fundLength = fundList?.length;
   // const arr = [];
@@ -111,12 +111,11 @@ function Homepage() {
         </h1>
         <Row className="d-flex justify-content-center">
           {fundList?.slice(0, 3).map((item, index) => {
-            let totalDonated = 0;
+            let money = 0
             if (item.userDonate) {
               item.userDonate.forEach((list) => {
-                if (list.status === "success")
-                  totalDonated = +list.donateAmount;
-              });
+                if (list.status === "success") money += list.donateAmount
+              })
             }
             return (
               <>
@@ -127,14 +126,14 @@ function Homepage() {
                     isLogin={isLogin}
                     id={item.id}
                     image={item.thumbnail}
-                    progress={(totalDonated / item.goal) * 100}
+                    progress={(money / item.goal) * 100}
                     total={item.goal}
                     title={item.title}
                     desc={item.description}
                   />
                 </Col>
               </>
-            );
+            )
           })}
           {/* 
           <Col lg={4} md={6} className="donate-box">
@@ -163,7 +162,7 @@ function Homepage() {
         closeRegister={closeRegister}
       />
     </>
-  );
+  )
 }
 
-export default Homepage;
+export default Homepage

@@ -152,6 +152,13 @@ exports.getFundByUser = async (req, res) => {
         attributes: {
           exclude: ["createdAt", "updatedAt"],
         },
+        include: {
+          model: Transaction,
+          as: "userDonate",
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "proofAttachment"],
+          },
+        },
       },
       attributes: {
         exclude: ["createdAt", "updatedAt", "password"],

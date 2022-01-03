@@ -1,36 +1,37 @@
-import { Modal, Form, Button, Row, Col } from "react-bootstrap";
-import Struk from "../assets/struk.png";
+import { Modal, Form, Button, Row, Col } from "react-bootstrap"
+import Struk from "../assets/struk.png"
+import { convert } from "rupiah-format"
 
-import { useMutation } from "react-query";
-import { API } from "../config/api";
+import { useMutation } from "react-query"
+import { API } from "../config/api"
 
 function ApproveModalComponent(props) {
-  const { showDonate, handleCloseDonate, userDonate, refetch } = props;
+  const { showDonate, handleCloseDonate, userDonate, refetch } = props
 
   const handleSubmit = useMutation(async (e) => {
     try {
-      e.preventDefault();
+      e.preventDefault()
 
-      const body = { status: "success" };
-      console.log(body);
+      const body = { status: "success" }
+      console.log(body)
 
       const config = {
         headers: {
           "Content-type": "application/json",
         },
-      };
+      }
 
       const response = await API.patch(
         `/transaction/${userDonate.id}`,
         body,
         config
-      );
-      refetch();
-      handleCloseDonate();
+      )
+      refetch()
+      handleCloseDonate()
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  });
+  })
 
   return (
     <Modal
@@ -50,10 +51,8 @@ function ApproveModalComponent(props) {
                   className="form-color"
                   // onChange={handleOnChange}
                   // value={state.fullname}
-                  name="fullname"
-                  size="sm"
-                  type="text"
-                  placeholder={userDonate?.donateAmount}
+                  placeholder={convert(userDonate?.donateAmount)}
+                  disabled
                 />
               </Form.Group>
               <img src={userDonate?.proofAttachment} alt="struk"></img>
@@ -69,7 +68,7 @@ function ApproveModalComponent(props) {
         </Row>
       </Modal.Body>
     </Modal>
-  );
+  )
 }
 
-export default ApproveModalComponent;
+export default ApproveModalComponent

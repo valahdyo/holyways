@@ -1,69 +1,72 @@
-import { useRef, useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { useHistory } from "react-router-dom";
+import { useRef, useState, useContext } from "react"
+import { AuthContext } from "../context/AuthContext"
+import { useHistory } from "react-router-dom"
 import { useMutation } from "react-query"
 import { API } from "../config/api"
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Alert
-} from "react-bootstrap";
-import NavbarComponent from "../components/Navbar";
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap"
+import { subDays } from "date-fns"
+import DatePicker from "react-datepicker"
+import NavbarComponent from "../components/Navbar"
+import "react-datepicker/dist/react-datepicker.css"
 
 function Formfundpage() {
-  let history = useHistory();
+  let history = useHistory()
 
   const [state] = useContext(AuthContext)
-
-  const [uploadedFileName, setUploadedFileName] = useState(null);
+  const [startDate, setStartDate] = useState(null)
+  const [uploadedFileName, setUploadedFileName] = useState(null)
   const [message, setMessage] = useState(null)
   const [form, setForm] = useState({
     title: "",
     thumbnail: "",
-    goal:"",
-    description: ""
-  });
+    goal: "",
+    description: "",
+  })
 
-  const {title, goal, description} = form
+  const { title, goal, description } = form
 
-  const inputRef = useRef(null);
+  const inputRef = useRef(null)
 
   const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.type === "file" ? e.target.files : e.target.value,
-    });
-      if (e.target.type === "file") {
-        inputRef.current?.files &&
-        setUploadedFileName(inputRef.current.files[0].name);
-      }
+      [e.target.name]:
+        e.target.type === "file" ? e.target.files : e.target.value,
+    })
+    if (e.target.type === "file") {
+      inputRef.current?.files &&
+        setUploadedFileName(inputRef.current.files[0].name)
     }
+  }
   const handleUploadImage = () => {
-    inputRef.current?.click();
-  };
-    
+    inputRef.current?.click()
+  }
+
   const resetFile = () => {
     setUploadedFileName(null)
     inputRef.current.file = null
     form.thumbnail = ""
   }
 
-  const handleSubmit = useMutation(async e => {
+  const handleChangeDate = (date) => {
+    setStartDate(date)
+    console.log(new Date(startDate).toISOString())
+  }
+
+  const handleSubmit = useMutation(async (e) => {
     try {
       e.preventDefault()
 
       const formData = new FormData()
       if (!form.thumbnail[0]) {
         console.log("error")
-        throw new Error("Please upload the thumbnail")
+        throw new Error("Please fill in all fields!")
       }
       formData.set("thumbnail", form?.thumbnail[0], form.thumbnail[0]?.name)
       formData.set("title", form.title)
       formData.set("goal", form.goal)
       formData.set("description", form.description)
+      formData.set("targetDate", new Date(startDate).toISOString())
       formData.set("idUser", state.user.id)
 
       const config = {
@@ -71,17 +74,17 @@ function Formfundpage() {
           "Content-type": "multipart/form-data",
         },
       }
-      console.log(form);
+      console.log(form)
       const response = await API.post("/fund", formData, config)
       history.push("/raisefund")
     } catch (error) {
       console.log(error)
       const alert = (
         <Alert variant="danger" className="py-1">
-          {error.message}
+          "Please fill in all fields!"
         </Alert>
-      );
-      setMessage(alert);
+      )
+      setMessage(alert)
     }
   })
 
@@ -94,7 +97,7 @@ function Formfundpage() {
         </div>
         <Row className="d-flex justify-content-left">
           <Col lg="11">
-          {true && message}
+            {true && message}
             <Form /*onSubmit={handleOnSubmit}*/>
               <Form.Group className="mb-3" controlId="formTitle">
                 <Form.Control
@@ -122,21 +125,48 @@ function Formfundpage() {
                 >
                   Attach Thumbnail
                 </Button>
-                {uploadedFileName ? <><button onClick={resetFile} type="button" class="close float-none ml-3" aria-label="">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-                <span className="ml-2">{uploadedFileName}</span></> : ""}
+                {uploadedFileName ? (
+                  <>
+                    <button
+                      onClick={resetFile}
+                      type="button"
+                      class="close float-none ml-3"
+                      aria-label=""
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <span className="ml-2">{uploadedFileName}</span>
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
               <Form.Group className="mb-3" controlId="formBasicGoals">
-                <Form.Control
-                  className="form-color"
-                  onChange={handleChange}
-                  value={goal}
-                  name="goal"
-                  size="sm"
-                  type="number"
-                  placeholder="Goals Donation"
-                />
+                <Row>
+                  <Col lg={4}>
+                    <Form.Control
+                      className="form-color"
+                      onChange={handleChange}
+                      value={goal}
+                      name="goal"
+                      size="sm"
+                      type="number"
+                      placeholder="Goals Donation"
+                    />
+                  </Col>
+
+                  <Col lg={3}>
+                    <DatePicker
+                      selected={startDate}
+                      onChange={handleChangeDate}
+                      dateFormat="yyyy/MM/dd"
+                      isClearable
+                      className="form-color form-control-sm form-control"
+                      minDate={new Date()}
+                      placeholderText="Set Target Date"
+                    />
+                  </Col>
+                </Row>
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicDescription">
@@ -167,7 +197,7 @@ function Formfundpage() {
         </Row>
       </Container>
     </>
-  );
+  )
 }
 
-export default Formfundpage;
+export default Formfundpage

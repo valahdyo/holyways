@@ -1,16 +1,25 @@
-import { useHistory } from "react-router-dom";
-import { Card, ProgressBar, Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom"
+import { Card, ProgressBar, Button } from "react-bootstrap"
 
-import convertRupiah from "rupiah-format";
+import convertRupiah from "rupiah-format"
 
 function DonateCardComponent(props) {
-  const { image, title, total, desc, progress, isLogin, handleShowLogin, id } =
-    props;
+  const {
+    image,
+    title,
+    total,
+    desc,
+    progress,
+    isLogin,
+    handleShowLogin,
+    id,
+    btn,
+  } = props
 
-  const history = useHistory();
+  const history = useHistory()
   const handleDonate = () => {
-    history.push("/fund/" + id);
-  };
+    history.push("/fund/" + id)
+  }
   return (
     <Card>
       <Card.Img variant="top" src={image} />
@@ -29,12 +38,12 @@ function DonateCardComponent(props) {
             className="donate-btn"
             variant="primary"
           >
-            Donate
+            {btn ? btn : "Donate"}
           </Button>
         </div>
       </Card.Body>
     </Card>
-  );
+  )
 }
 
-export default DonateCardComponent;
+export default DonateCardComponent
