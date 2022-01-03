@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom"
 import { useMutation } from "react-query"
 import { API } from "../config/api"
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap"
-import { subDays } from "date-fns"
 import DatePicker from "react-datepicker"
 import NavbarComponent from "../components/Navbar"
 import "react-datepicker/dist/react-datepicker.css"
@@ -14,6 +13,7 @@ function Formfundpage() {
 
   const [state] = useContext(AuthContext)
   const [startDate, setStartDate] = useState(null)
+  const [preview, setPreview] = useState(null)
   const [uploadedFileName, setUploadedFileName] = useState(null)
   const [message, setMessage] = useState(null)
   const [form, setForm] = useState({
@@ -34,8 +34,11 @@ function Formfundpage() {
         e.target.type === "file" ? e.target.files : e.target.value,
     })
     if (e.target.type === "file") {
-      inputRef.current?.files &&
+      if (inputRef.current?.files) {
         setUploadedFileName(inputRef.current.files[0].name)
+        let url = URL.createObjectURL(e.target.files[0])
+        setPreview(url)
+      }
     }
   }
   const handleUploadImage = () => {
@@ -125,7 +128,7 @@ function Formfundpage() {
                 >
                   Attach Thumbnail
                 </Button>
-                {uploadedFileName ? (
+                {uploadedFileName && (
                   <>
                     <button
                       onClick={resetFile}
@@ -136,9 +139,14 @@ function Formfundpage() {
                       <span aria-hidden="true">&times;</span>
                     </button>
                     <span className="ml-2">{uploadedFileName}</span>
+                    <div>
+                      <img
+                        src={preview}
+                        className="prev-img mt-2"
+                        alt="preview"
+                      />
+                    </div>
                   </>
-                ) : (
-                  ""
                 )}
               </div>
               <Form.Group className="mb-3" controlId="formBasicGoals">
@@ -151,7 +159,7 @@ function Formfundpage() {
                       name="goal"
                       size="sm"
                       type="number"
-                      placeholder="Goals Donation"
+                      placeholder="Goals Donation (Rp)"
                     />
                   </Col>
 

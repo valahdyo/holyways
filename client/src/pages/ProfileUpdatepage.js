@@ -23,6 +23,7 @@ function ProfileUpdatepage() {
     return response.data.data.user
   })
 
+  const [preview, setPreview] = useState(null)
   const [uploadedFileName, setUploadedFileName] = useState(null)
   const [message, setMessage] = useState(null)
   const inputRef = useRef(null)
@@ -40,8 +41,11 @@ function ProfileUpdatepage() {
         e.target.type === "file" ? e.target.files : e.target.value,
     })
     if (e.target.type === "file") {
-      inputRef.current?.files &&
+      if (inputRef.current?.files) {
         setUploadedFileName(inputRef.current.files[0].name)
+        let url = URL.createObjectURL(e.target.files[0])
+        setPreview(url)
+      }
     }
   }
 
@@ -143,7 +147,7 @@ function ProfileUpdatepage() {
                   className="d-none"
                   type="file"
                 />
-                {uploadedFileName ? (
+                {uploadedFileName && (
                   <>
                     <button
                       onClick={resetFile}
@@ -154,9 +158,14 @@ function ProfileUpdatepage() {
                       <span aria-hidden="true">&times;</span>
                     </button>
                     <span className="ml-2">{uploadedFileName}</span>
+                    <div>
+                      <img
+                        src={preview}
+                        className="prev-img mt-3"
+                        alt="preview"
+                      />
+                    </div>
                   </>
-                ) : (
-                  ""
                 )}
               </div>
               <Form.Group className="mb-3" controlId="formName">

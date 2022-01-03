@@ -22,7 +22,7 @@ function DonateCardComponent(props) {
   }
   return (
     <Card>
-      <Card.Img variant="top" src={image} />
+      <Card.Img variant="top" src={image} className="donate-card-img" />
       <Card.Body>
         <Card.Title className="donate-title">{title}</Card.Title>
         <Card.Text className="donate-desc">{desc}</Card.Text>

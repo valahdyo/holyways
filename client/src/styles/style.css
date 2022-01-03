@@ -1,3 +1,17 @@
-.mr-7 {
-    margin-right: 20%
+.donate-card-img {
+  width: inherit;
+  height: auto;
+  object-fit: cover;
+}
+
+.prev-img {
+  width: 22rem;
+  height: auto;
+  object-fit: cover;
+}
+
+.approve-img {
+  width: 26.25rem;
+  height: auto;
+  object-fit: cover;
 }

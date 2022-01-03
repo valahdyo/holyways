@@ -55,7 +55,11 @@ function ApproveModalComponent(props) {
                   disabled
                 />
               </Form.Group>
-              <img src={userDonate?.proofAttachment} alt="struk"></img>
+              <img
+                className="approve-img"
+                src={userDonate?.proofAttachment}
+                alt="struk"
+              ></img>
               <Button
                 onClick={(e) => handleSubmit.mutate(e)}
                 className="attach-donate-btn mt-3 mb-3"

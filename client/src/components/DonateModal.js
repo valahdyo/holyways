@@ -1,85 +1,94 @@
-import { useRef, useState, useContext } from "react";
-import { useMutation } from "react-query";
-import { API } from "../config/api";
-import { useHistory } from "react-router-dom";
-import { Modal, Form, Button, Row, Col, Alert } from "react-bootstrap";
+import { useRef, useState, useContext } from "react"
+import { useMutation } from "react-query"
+import { API } from "../config/api"
+import { useHistory } from "react-router-dom"
+import { Modal, Form, Button, Row, Col, Alert } from "react-bootstrap"
 
-import IconAttach from "../assets/icon-attach-payment.png";
+import IconAttach from "../assets/icon-attach-payment.png"
 
 function DonateModalComponent(props) {
-  let history = useHistory();
-  const { showDonate, handleCloseDonate, fund, refetch } = props;
-  const [uploadedFileName, setUploadedFileName] = useState(null);
-  const [message, setMessage] = useState(null);
+  let history = useHistory()
+  const { showDonate, handleCloseDonate, fund, refetch } = props
+  const [preview, setPreview] = useState(null)
+  const [uploadedFileName, setUploadedFileName] = useState(null)
+  const [message, setMessage] = useState(null)
   const [form, setForm] = useState({
     donateAmount: "",
     proofAttachment: "",
-  });
+  })
 
-  const inputRef = useRef();
+  const inputRef = useRef()
 
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]:
         e.target.type === "file" ? e.target.files : e.target.value,
-    });
+    })
     if (e.target.type === "file") {
-      inputRef.current?.files &&
-        setUploadedFileName(inputRef.current.files[0].name);
+      if (inputRef.current?.files) {
+        setUploadedFileName(inputRef.current.files[0].name)
+        let url = URL.createObjectURL(e.target.files[0])
+        setPreview(url)
+      }
     }
-  };
+  }
 
   const resetFile = () => {
-    setUploadedFileName(null);
-    inputRef.current.file = null;
-    form.proofAttachment = "";
-  };
+    setUploadedFileName(null)
+    inputRef.current.file = null
+    form.proofAttachment = ""
+  }
 
   const handleUploadImage = () => {
-    inputRef.current?.click();
-  };
+    inputRef.current?.click()
+  }
 
   const handleSubmit = useMutation(async (e) => {
     try {
-      e.preventDefault();
+      e.preventDefault()
 
-      const formData = new FormData();
+      const formData = new FormData()
       if (!form.proofAttachment[0]) {
-        console.log("error");
-        throw new Error("Please provide your proof");
+        console.log("error")
+        throw new Error("Please provide your proof")
       }
       formData.set(
         "proofAttachment",
         form?.proofAttachment[0],
         form.proofAttachment[0]?.name
-      );
-      formData.set("donateAmount", form.donateAmount);
+      )
+      formData.set("donateAmount", form.donateAmount)
 
       const config = {
         headers: {
           "Content-type": "multipart/form-data",
         },
-      };
-      console.log(form);
+      }
+      console.log(form)
       const response = await API.post(
         "/transaction/" + fund.id,
         formData,
         config
-      );
+      )
 
-      handleCloseDonate();
-      refetch();
+      handleCloseDonate()
+      resetFile()
+      setForm({
+        donateAmount: "",
+        proofAttachment: "",
+      })
+      refetch()
     } catch (error) {
-      console.log(error);
+      console.log(error)
       const alert = (
         <Alert variant="danger" className="py-1">
           {error.message}
         </Alert>
-      );
-      setMessage(alert);
+      )
+      setMessage(alert)
     }
-  });
+  })
 
   return (
     <Modal
@@ -123,13 +132,20 @@ function DonateModalComponent(props) {
                   <>
                     <button
                       onClick={resetFile}
-                      type="button "
-                      class="close float-none ml-3 mr-2"
+                      type="button"
+                      class="close float-none ml-3"
                       aria-label=""
                     >
                       <span aria-hidden="true">&times;</span>
                     </button>
-                    <span className="">{uploadedFileName}</span>
+                    <span className="ml-2">{uploadedFileName}</span>
+                    <div>
+                      <img
+                        src={preview}
+                        className="prev-img mt-3"
+                        alt="preview"
+                      />
+                    </div>
                   </>
                 ) : (
                   <p className="mt-2 d-inline ml-2 text-muted text-tnr">
@@ -149,7 +165,7 @@ function DonateModalComponent(props) {
         </Row>
       </Modal.Body>
     </Modal>
-  );
+  )
 }
 
-export default DonateModalComponent;
+export default DonateModalComponent
