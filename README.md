@@ -8,8 +8,8 @@ This repo is backend side for holyways app which is charity website that registe
 
 Project is created with:
 
-- Node.js
-- React.js
+- Node
+- Reactjs
 - React-Query
 - Bootstrap
 - Express

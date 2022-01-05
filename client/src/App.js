@@ -10,6 +10,7 @@ import "./styles/HomepageStyle.css"
 import "./styles/ProfilepageStyle.css"
 import "./styles/DonateInfoStyle.css"
 import "./styles/FormfundpageStyle.css"
+import "./styles/ChatStyle.css"
 import "./styles/style.css"
 
 if (localStorage.accessToken) {

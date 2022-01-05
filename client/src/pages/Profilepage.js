@@ -1,6 +1,6 @@
 import { API } from "../config/api"
 import { useQuery } from "react-query"
-import { useHistory } from "react-router-dom"
+import { useHistory, Link } from "react-router-dom"
 import { useContext } from "react"
 import { AuthContext } from "../context/AuthContext"
 import convertRupiah from "rupiah-format"
@@ -79,7 +79,12 @@ function Profilepage() {
                   <Col>
                     <div className="donation-box">
                       <h3 className="donation-heading">
-                        {item.fundDetail.title}
+                        <Link
+                          style={{ color: "black" }}
+                          to={"/fund/" + item.fundDetail.id}
+                        >
+                          {item.fundDetail.title}
+                        </Link>
                       </h3>
                       <p className="donation-date">
                         <strong style={{ fontWeight: 900 }}>{date[0]}, </strong>

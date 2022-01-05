@@ -40,6 +40,10 @@ exports.getUser = async (req, res) => {
             },
           ],
         },
+        {
+          model: Fund,
+          as: "userFund",
+        },
       ],
     })
     user = JSON.parse(JSON.stringify(user))
