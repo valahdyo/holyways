@@ -15,15 +15,30 @@ function Raisefundpage() {
 
   const handleRaisefund = () => history.push("/formfund")
 
-  let { data: fundlist } = useQuery("fundListCache", async () => {
+  let { data: fundlist, refetch } = useQuery("fundListCache", async () => {
     const config = {
       headers: {
         "Content-type": "application/json",
       },
     }
     const response = await API.get("/user/fund/" + state.user.id)
+    console.log(response)
     return response?.data.data.user.userFund
   })
+
+  const handleDelete = async (idFund, idUser) => {
+    try {
+      console.log("executed", idFund)
+      if (state.user.id === idUser) {
+        await API.delete("/fund/" + idFund)
+        refetch()
+      } else {
+        throw new Error("cannot delete, not authorized!")
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <>
@@ -50,6 +65,7 @@ function Raisefundpage() {
             /> */}
           {fundlist?.map((item, index) => {
             let money = 0
+            let dateExpired = new Date(item.targetDate) <= new Date()
             if (item.userDonate) {
               item.userDonate.map((fund, index) => {
                 if (fund.status === "success") {
@@ -57,12 +73,17 @@ function Raisefundpage() {
                 }
               })
             }
+            let goalReached = money > item.goal
             return (
               <>
                 <Col lg={4} className="donate-box pl-0 pt-0">
                   {" "}
                   <DonateCardComponent
+                    handleDelete={handleDelete}
+                    dateExpired={dateExpired}
+                    goalReached={goalReached}
                     id={item.id}
+                    idUser={item.idUser}
                     isLogin={isLogin}
                     image={item.thumbnail}
                     title={item.title}

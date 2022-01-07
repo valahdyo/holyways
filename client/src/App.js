@@ -46,11 +46,11 @@ function App() {
     checkUser()
   }, [state.isLogin])
 
-  // useEffect(() => {
-  //   if (state.isLogin) {
-  //     history.push("/");
-  //   }
-  // }, [state]);
+  /*   useEffect(() => {
+      if (state.isLogin) {
+        history.push("/");
+      }
+    }, [state]); */
 
   return (
     <Router>

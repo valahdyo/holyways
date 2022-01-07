@@ -14,12 +14,17 @@ function DonateCardComponent(props) {
     handleShowLogin,
     id,
     btn,
+    goalReached,
+    dateExpired,
+    handleDelete,
+    idUser,
   } = props
 
   const history = useHistory()
   const handleDonate = () => {
     history.push("/fund/" + id)
   }
+  console.log(goalReached, dateExpired)
   return (
     <Card>
       <Card.Img variant="top" src={image} className="donate-card-img" />
@@ -31,15 +36,36 @@ function DonateCardComponent(props) {
           variant="danger"
           now={progress}
         />
-        <div className="donate-box-bottom">
-          <p className="donate-collected">{convertRupiah.convert(total)}</p>
-          <Button
-            onClick={isLogin === "true" ? handleDonate : handleShowLogin}
-            className="donate-btn"
-            variant="primary"
-          >
-            {btn ? btn : "Donate"}
-          </Button>
+        <div className="donate-box-bottom d-flex justify-content-between">
+          {goalReached || dateExpired ? (
+            <>
+              <Button
+                onClick={isLogin === "true" ? handleDonate : handleShowLogin}
+                className="donate-btn h-50 mt-4"
+                variant="primary"
+              >
+                {btn ? btn : "Donate"}
+              </Button>
+              <Button
+                variant="secondary"
+                className="donate-btn-disabled h-50 mt-4"
+                onClick={() => handleDelete(id, idUser)}
+              >
+                Delete Fund
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="donate-collected">{convertRupiah.convert(total)}</p>
+              <Button
+                onClick={isLogin === "true" ? handleDonate : handleShowLogin}
+                className="donate-btn h-50 mt-4"
+                variant="primary"
+              >
+                {btn ? btn : "Donate"}
+              </Button>
+            </>
+          )}
         </div>
       </Card.Body>
     </Card>

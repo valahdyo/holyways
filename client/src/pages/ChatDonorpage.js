@@ -15,7 +15,7 @@ export default function ChatDonorpage() {
 
   const [contact, setContact] = useState(null)
   const [contacts, setContacts] = useState([])
-  // create messages state
+
   const [messages, setMessages] = useState([])
 
   useEffect(() => {
@@ -28,7 +28,6 @@ export default function ChatDonorpage() {
       },
     })
 
-    // define corresponding socket listener
     socket.on("new message", () => {
       console.log("contact", contact)
       console.log("triggered", contact?.id)
@@ -45,8 +44,6 @@ export default function ChatDonorpage() {
   const loadContact = () => {
     socket.emit("load fundraiser contact", idFund)
     socket.on("fundraiser contact", async (data) => {
-      // manipulate data to add message property with the newest message
-
       const dataContact = {
         ...data,
         fullName: data.fullName + " - Fundraiser",
@@ -91,15 +88,14 @@ export default function ChatDonorpage() {
   }
   const onClickContact = (data) => {
     setContact(data)
-    // emit event load messages
+
     socket.emit("load messages", data.id)
   }
 
-  const loadMessages = (value) => {
-    // define listener on event "messages"
+  const loadMessages = () => {
     socket.on("messages", async (data) => {
       console.log(data)
-      // get data messages
+
       if (data.length > 0) {
         const dataMessages = data.map((item) => ({
           idSender: item.sender.id,
@@ -112,14 +108,12 @@ export default function ChatDonorpage() {
     })
   }
   const onSendMessage = (e) => {
-    // listen only enter key event press
     if (e.key === "Enter") {
       const data = {
         idRecipient: contact.id,
         message: e.target.value,
       }
 
-      //emit event send message
       socket.emit("send message", data)
       e.target.value = ""
     }

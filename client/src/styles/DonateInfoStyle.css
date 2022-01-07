@@ -88,14 +88,11 @@
   box-shadow: none;
 }
 
-.ml-7 {
-  margin-left: 3%;
-}
+.donate-btn-disabled {
+  font-size: 14px;
+  font-weight: 900;
 
-.ml-40 {
-  margin-left: 40%;
-}
+  border-radius: 10px;
 
-.ml-50 {
-  margin-left: 50%;
+  box-shadow: none;
 }

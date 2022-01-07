@@ -44,26 +44,45 @@ export default function ChatFundraiserpage() {
     socket.emit("load donor contacts")
     socket.on("donor contacts", (data) => {
       console.log(data)
-      // filter just customers which have sent a message
+
       let dataContacts = data.filter(
         (item) =>
           item.id !== state.user.id &&
           (item.recipientMessage.length > 0 || item.senderMessage.length > 0)
       )
 
-      // manipulate customers to add message property with the newest message
       dataContacts = dataContacts.map((item) => {
         let lastChat = null
-        if (item.senderMessage && item.recipientMessage) {
+
+        // If sender message and recipient message exist
+        if (
+          item?.senderMessage.length > 0 &&
+          item?.recipientMessage.length > 0
+        ) {
           if (
-            item.senderMessage[item.senderMessage.length - 1].id >
-            item.recipientMessage[item.recipientMessage.length - 1].id
+            item?.senderMessage[item.senderMessage.length - 1]?.id >
+            item?.recipientMessage[item.recipientMessage.length - 1]?.id
           ) {
-            lastChat = item.senderMessage[item.senderMessage.length - 1].message
+            lastChat =
+              item?.senderMessage[item.senderMessage.length - 1]?.message
           } else {
             lastChat =
-              item.recipientMessage[item.recipientMessage.length - 1].message
+              item?.recipientMessage[item.recipientMessage.length - 1]?.message
           }
+        }
+        // If sender message only or recipient message only
+        if (
+          item?.senderMessage.length > 0 &&
+          item?.recipientMessage.length === 0
+        ) {
+          lastChat = item.senderMessage[item.senderMessage.length - 1]?.message
+        }
+        if (
+          item?.senderMessage.length === 0 &&
+          item?.recipientMessage.length > 0
+        ) {
+          lastChat =
+            item.recipientMessage[item.recipientMessage.length - 1]?.message
         }
 
         return {
@@ -77,10 +96,9 @@ export default function ChatFundraiserpage() {
   }
 
   const loadMessages = (value) => {
-    // define listener on event "messages"
     socket.on("messages", async (data) => {
       console.log(data)
-      // get data messages
+
       if (data.length > 0) {
         const dataMessages = data.map((item) => ({
           idSender: item.sender.id,
@@ -96,12 +114,11 @@ export default function ChatFundraiserpage() {
 
   const onClickContact = (data) => {
     setContact(data)
-    // emit event load messages
+
     socket.emit("load messages", data.id)
   }
 
   const onSendMessage = (e) => {
-    // listen only enter key event press
     if (e.key === "Enter") {
       const data = {
         idRecipient: contact.id,

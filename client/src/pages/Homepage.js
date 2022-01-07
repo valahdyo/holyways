@@ -112,28 +112,31 @@ function Homepage() {
         <Row className="d-flex justify-content-center">
           {fundList?.slice(0, 3).map((item, index) => {
             let money = 0
+            let dateExpired = new Date() >= new Date(item.targetDate)
             if (item.userDonate) {
               item.userDonate.forEach((list) => {
                 if (list.status === "success") money += list.donateAmount
               })
             }
-            return (
-              <>
-                <Col lg={4} md={6} className="donate-box">
-                  <DonateCardComponent
-                    closeLogin={closeLogin}
-                    handleShowLogin={handleShowLogin}
-                    isLogin={isLogin}
-                    id={item.id}
-                    image={item.thumbnail}
-                    progress={(money / item.goal) * 100}
-                    total={item.goal}
-                    title={item.title}
-                    desc={item.description}
-                  />
-                </Col>
-              </>
-            )
+            if (money <= item.goal || dateExpired) {
+              return (
+                <>
+                  <Col lg={4} md={6} className="donate-box">
+                    <DonateCardComponent
+                      closeLogin={closeLogin}
+                      handleShowLogin={handleShowLogin}
+                      isLogin={isLogin}
+                      id={item.id}
+                      image={item.thumbnail}
+                      progress={(money / item.goal) * 100}
+                      total={item.goal}
+                      title={item.title}
+                      desc={item.description}
+                    />
+                  </Col>
+                </>
+              )
+            }
           })}
           {/* 
           <Col lg={4} md={6} className="donate-box">

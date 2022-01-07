@@ -5,18 +5,21 @@ import ApproveModalComponent from "./ApproveModal"
 import convertRupiah from "rupiah-format"
 
 function DonationNotApproveComponent({ list, refetch, total }) {
+  const [limit, setLimit] = useState(3)
   const [showDonate, setShowDonate] = useState({
     showModal: false,
     data: null,
   })
 
-  const handleShowDonate = (e, index) => {
-    setShowDonate({ showModal: true, modalId: index })
-  }
-
   const handleCloseDonate = (e, index) => {
     setShowDonate({ showModal: false, data: null })
   }
+
+  const handleLoadMore = () => {
+    setLimit(limit + 3)
+  }
+
+  let notApprove = list?.filter((item) => item.status === "pending")
 
   return (
     <>
@@ -25,7 +28,7 @@ function DonationNotApproveComponent({ list, refetch, total }) {
           Donation has not been approved ({total.notApprove})
         </h1>
         <Row className="justify-content-center">
-          {list?.map((item, index) => {
+          {notApprove?.slice(0, limit).map((item, index) => {
             if (item.status === "pending") {
               let date = new Date(item.createdAt)
               date = date.toDateString().split(" ")
@@ -64,8 +67,14 @@ function DonationNotApproveComponent({ list, refetch, total }) {
               )
             }
           })}
-          {total?.transaction > 3 ? (
-            <p className="donate-info-desc">Load More</p>
+          {total?.notApprove > 3 && limit < total?.notApprove ? (
+            <a
+              onClick={handleLoadMore}
+              className="donate-info-desc mb-4"
+              style={{ cursor: "pointer", color: "#616161" }}
+            >
+              Load More
+            </a>
           ) : (
             ""
           )}

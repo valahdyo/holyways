@@ -3,7 +3,7 @@ import DonateDonateInfoComponet from "../components/DonateInfo"
 import DonationListComponent from "../components/DonationList"
 import DonationNotApproveComponent from "../components/DonationNotApprove"
 
-import { useState, useContext } from "react"
+import { useContext } from "react"
 import { useParams } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
 import { useQuery } from "react-query"
